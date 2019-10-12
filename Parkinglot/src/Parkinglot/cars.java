@@ -10,7 +10,7 @@ public class cars {
 
     public void generate_residence_time() {
         Random random = new Random();
-        this.Residence_time = random.nextInt() * (5 - 1 + 1) + 1;
+        this.Residence_time = random.nextInt((5-1)+1)+1;
     }
 
     public int getResidence_time() {
@@ -29,7 +29,7 @@ public class cars {
 
     }
 
-    public void setTicket(Parkinglot.ticket ticket) {
+    public void setTicket(ticket ticket) {
         this.ticket = ticket;
     }
 
