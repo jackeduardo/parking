@@ -1,7 +1,7 @@
 package Parkinglot;
 
 public class parkinglot {
-    private int capacity=50;
+    private static int capacity=50;
     private boolean if_admit=true;
 
     public void entrance_gate(cars car,ticket ticket){

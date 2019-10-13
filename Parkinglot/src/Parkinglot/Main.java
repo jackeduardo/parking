@@ -6,9 +6,12 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+
         cars[] cars = read_input();
         ticket ticket = new ticket();
         parkinglot Parkinglot = new parkinglot();
@@ -16,17 +19,46 @@ public class Main {
         Timer t = new Timer();
         Parkinglot_Timer Parkinglot_timer = new Parkinglot_Timer();
         t.schedule(Parkinglot_timer, 1000, 1000);//Show the current time per sec
-        for (int i = 0; i < cars.length; i++) {// Each car will cost 0.5 sec at the entrance
-            try {
-                Parkinglot.entrance_gate(cars[i], ticket);
-                cars[i].generate_residence_time();
-                System.out.println(cars[i].getTicket().getIn_time());
-                Thread.sleep(500);
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }
+        BlockingQueue<String> plate_queue = new LinkedBlockingDeque();
+        BlockingQueue<Integer> residence_time_queue = new LinkedBlockingDeque();
+        //Both threads for entrance and exit
+        Thread Entrance = new Thread() {
+            @Override
+            public void run() {
+                for (int i = 0; i < cars.length; i++) {// Each car will cost 0.5 sec at the entrance
+                    try {
+                        Parkinglot.entrance_gate(cars[i], ticket);
+                        cars[i].generate_residence_time();
+                        plate_queue.put(cars[i].getLicense_plate());
+                        residence_time_queue.put(cars[i].getResidence_time());
+                        System.out.println(cars[i].getTicket().getIn_time());
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-        }
+                }
+
+            }
+        };
+        Thread Exit = new Thread() {
+            public void run() {
+                //System.out.println("this thread2 "+cars[2].getResidence_time());
+                try {
+                    Thread.sleep(500);
+                    for (int i = 0; i < cars.length; i++) {
+                        plate_queue.take();
+                        residence_time_queue.take();
+                    }
+
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Entrance.start();
+        Exit.start();
 
 
     }
