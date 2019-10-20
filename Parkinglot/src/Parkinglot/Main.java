@@ -31,13 +31,13 @@ public class Main {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                int countforwaiting=0;
+                int countforwaiting = 0;
                 for (int i = 0; i < 100; i++) {// Each car will cost 1 sec at the entrance
                     try {
-                        int index=i-countforwaiting;
-                        if (index < cars.length||Parkinglot.get_if_admit()) {
+                        int index = i - countforwaiting;
+                        if (index < cars.length || Parkinglot.get_if_admit()) {
                             ticket ticket = new ticket();
-                            if (Parkinglot.get_if_admit()&&index<cars.length) {// check the capacity for the parking lot whether it admits more cars to come in.
+                            if (Parkinglot.get_if_admit() && index < cars.length) {// check the capacity for the parking lot whether it admits more cars to come in.
                                 Parkinglot.entrance_gate(cars[index], ticket);
                                 cars[index].getTicket().setIn_time();
                                 String in_time = cars[index].getTicket().getIn_time();
@@ -53,10 +53,15 @@ public class Main {
                                 out_time_queue.put(out_time_string);
                                 plate_queue.put(cars[index].getLicense_plate());
                                 System.out.println("Car " + cars[index].getLicense_plate() + " has entered." + " ");
-                                System.out.println("Parking lots' capacity: " + parkinglot.getCapacity());
+                                System.out.println("Parking lots' capacity: " + parkinglot.getRemaining_Capacity());
                                 Thread.sleep(1000);
                             } else {
-                                System.out.println("Parking lot is full. Cars cannot be admitted.");
+                                if (!Parkinglot.get_if_admit()) {
+                                    System.out.println("Parking lot is full. Cars cannot be admitted.");
+                                }
+                                if (Parkinglot.getCapacity() == parkinglot.getRemaining_Capacity()) {
+                                    System.out.println("Parking lot is empty.");
+                                }
                                 countforwaiting++;
                                 Thread.sleep(1000);
                             }
@@ -81,16 +86,17 @@ public class Main {
                 try {
                     for (int i = 0; i < 100; i++) {
                         //int count=0;
-                        String Current_time=current_time.take();
+                        String Current_time = current_time.take();
                         System.out.println("Current time is : " + Current_time);
                         boolean check = true;
-                        if(car_stream_receive.peek()!=null&&actually_leaving_time.peek()!=null){
-                        if (actually_leaving_time_with_cars.size() < cars.length) {
-                            actually_leaving_time_with_cars.put(car_stream_receive.take(), actually_leaving_time.take());
-                        } else {
-                            Thread.sleep(1000);
-                            check = false;
-                        }}
+                        if (car_stream_receive.peek() != null && actually_leaving_time.peek() != null) {
+                            if (actually_leaving_time_with_cars.size() < cars.length) {
+                                actually_leaving_time_with_cars.put(car_stream_receive.take(), actually_leaving_time.take());
+                            } else {
+                                Thread.sleep(1000);
+                                check = false;
+                            }
+                        }
                         for (Map.Entry<cars, String> entry : actually_leaving_time_with_cars.entrySet()) {
                             if (Current_time.equals(entry.getValue())) {
                                 exit_waiting_queue.put(entry.getKey());
@@ -118,10 +124,11 @@ public class Main {
 
                         SimpleDateFormat current_time = new SimpleDateFormat("HH:mm:ss");
                         String current_time_format = current_time.format(new Date());
-                        if(out_time_queue.peek()!=null&&plate_queue.peek()!=null&&car_stream.peek()!=null){
-                        out_time_String.add(out_time_queue.take());
-                        plate_list.add(plate_queue.take());
-                        cars_list.add(car_stream.take());}
+                        if (out_time_queue.peek() != null && plate_queue.peek() != null && car_stream.peek() != null) {
+                            out_time_String.add(out_time_queue.take());
+                            plate_list.add(plate_queue.take());
+                            cars_list.add(car_stream.take());
+                        }
                         for (int j = 0; j < out_time_String.size(); j++) {
                             if (current_time_format.equals(out_time_String.get(j))) {
                                 //exit_waiting_queue.put(plate_list.get(j));
@@ -151,7 +158,7 @@ public class Main {
                 //System.out.println("this thread2 "+cars[2].getResidence_time());
                 try {
 
-                    FileOutputStream fs = new FileOutputStream(new File("C:\\Users\\xuhaiyang\\Desktop\\cosc4353\\cosc4353 hw3\\parking\\Parkinglot\\carout"));
+                    FileOutputStream fs = new FileOutputStream(new File("C:\\Users\\xuhaiyang\\Desktop\\cosc4353\\cosc4353 hw3\\parking\\Parkinglot\\car_output\\carout"));
                     PrintStream p = new PrintStream(fs);
 
                     for (int i = 0; i < 100; i++) {
@@ -163,7 +170,7 @@ public class Main {
                         p.println("Car " + left_Car.getLicense_plate() + " left at " + lefttime);
                         left_Car.getTicket().setOut_time(lefttime);
                         Parkinglot.exit_gate(left_Car, entertime, lefttime);
-                        System.out.println("Parking lots' capacity: " + Parkinglot.getCapacity());
+                        System.out.println("Parking lots' capacity: " + Parkinglot.getRemaining_Capacity());
                     }
                     p.close();
 
@@ -198,7 +205,10 @@ public class Main {
     }
 
     public static cars[] read_input() throws Exception {
-        File file = new File("C:\\Users\\xuhaiyang\\Desktop\\cosc4353\\cosc4353 hw3\\parking\\Parkinglot\\Cars'Stream");
+        Scanner input = new Scanner(System.in);
+        System.out.println("Select the input (enter 1 - 5)");
+        String carin_number = input.nextLine();
+        File file = new File("C:\\Users\\xuhaiyang\\Desktop\\cosc4353\\cosc4353 hw3\\parking\\Parkinglot\\car_input\\carin" + carin_number);
         BufferedReader br_linescount = new BufferedReader(new FileReader(file));
         BufferedReader car_info_reader = new BufferedReader(new FileReader(file));
         int lines = 0;

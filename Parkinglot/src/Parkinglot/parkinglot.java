@@ -5,15 +5,20 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class parkinglot {
-    private static int capacity =5;
+    private static int capacity =30;
+    private static int remaining_capacity =30;
     private boolean if_admit ;
 
     public static int getCapacity() {
         return capacity;
     }
 
+    public static int getRemaining_Capacity() {
+        return remaining_capacity;
+    }
+
     public boolean capacity_check() {
-        return capacity >= 1;
+        return remaining_capacity >= 1;
     }
 
     public boolean get_if_admit(){
@@ -25,14 +30,14 @@ public class parkinglot {
     public void entrance_gate(cars car, ticket ticket) {
         ticket.setIn_time();
         car.setTicket(ticket);//give the ticket to the car
-        capacity -= 1;
+        remaining_capacity -= 1;
 
     }
 
     public void exit_gate(cars car, String intime, String outime) throws ParseException {
         int fee = payment_process(intime, outime);
         System.out.println("Car " + car.getLicense_plate() + " has paid the ticket for $" + fee + ".");
-        capacity += 1;
+        remaining_capacity += 1;
     }
 
     public int payment_process(String intime, String outime) throws ParseException {
