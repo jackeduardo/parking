@@ -14,16 +14,15 @@ public class ticket {
     public String getIn_time() {
         return in_time;
     }
-    public void setOut_time() {
-        Date currentTime = new Date();
-        this.out_time = DateToStr(currentTime);
+    public void setOut_time(String out_time) {
+        this.out_time = out_time;
     }
     public String getOut_time() {
         return out_time;
     }
 
     public static String DateToStr(java.util.Date Date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         return formatter.format(Date);
     }
 

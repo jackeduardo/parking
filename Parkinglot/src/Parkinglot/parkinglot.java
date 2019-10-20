@@ -1,37 +1,56 @@
 package Parkinglot;
 
-public class parkinglot {
-    private static int capacity=50;
-    private boolean if_admit=true;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-    public void entrance_gate(cars car,ticket ticket){
+public class parkinglot {
+    private static int capacity =50;
+    private boolean if_admit ;
+
+    public static int getCapacity() {
+        return capacity;
+    }
+
+    public boolean capacity_check() {
+        return capacity >= 1;
+    }
+
+    public boolean get_if_admit(){
+        if_admit=capacity_check();
+        return  if_admit;
+    }
+
+
+    public void entrance_gate(cars car, ticket ticket) {
         ticket.setIn_time();
         car.setTicket(ticket);//give the ticket to the car
-        this.capacity-=1;
-    }
-    public void exit_gate(cars car,ticket ticket){
-        ticket.setOut_time();
-        String in_time=ticket.getIn_time();
-        String out_time=ticket.getOut_time();//to be continued
-        System.out.println("Ticket is paid.");
-        System.out.println("Car "+car.getLicense_plate()+" exits.");
-        this.capacity+=1;
-    }
-    public void payment_process(int Residence_time){
-        int price=10;//$10 per second
-        int fee=price* Residence_time;
-        System.out.println("Parking fee is $"+fee+".");
+        capacity -= 1;
 
     }
 
-    public void Space_constrain(int capacity){
-        if(capacity<1){
-            System.out.println("No Space remained. Cars cannot be admitted.");
-            this.if_admit=false;
-        }
-        else{
-            this.if_admit=true;
-        }
+    public void exit_gate(cars car, String intime, String outime) throws ParseException {
+        int fee = payment_process(intime, outime);
+        System.out.println("Car " + car.getLicense_plate() + " has paid the ticket for $" + fee + ".");
+        capacity += 1;
+    }
+
+    public int payment_process(String intime, String outime) throws ParseException {
+        int price = 5;//$5 per second
+        return price * time_cal(intime, outime);
+    }
+
+    public int time_cal(String intime, String outime) throws ParseException {
+        long d = 1000 * 24 * 60 * 60;
+        long h = 1000 * 60 * 60;
+        long m = 1000 * 60;
+        long s = 1000;
+        SimpleDateFormat DateFormat = new SimpleDateFormat("HH:mm:ss");
+        Date in = DateFormat.parse(intime);
+        Date out = DateFormat.parse(outime);
+        long diff = out.getTime() - in.getTime();
+        long sec = diff % d % h % m / s;
+        return (int) sec;
     }
 
 
