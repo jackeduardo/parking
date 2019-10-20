@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class parkinglot {
-    private static int capacity =50;
+    private static int capacity =5;
     private boolean if_admit ;
 
     public static int getCapacity() {
