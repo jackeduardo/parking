@@ -37,7 +37,7 @@ public class Main {
                         int index=i-countforwaiting;
                         if (index < cars.length||Parkinglot.get_if_admit()) {
                             ticket ticket = new ticket();
-                            if (Parkinglot.get_if_admit()) {// check the capacity for the parking lot whether it admits more cars to come in.
+                            if (Parkinglot.get_if_admit()&&index<cars.length) {// check the capacity for the parking lot whether it admits more cars to come in.
                                 Parkinglot.entrance_gate(cars[index], ticket);
                                 cars[index].getTicket().setIn_time();
                                 String in_time = cars[index].getTicket().getIn_time();
@@ -58,19 +58,9 @@ public class Main {
                             } else {
                                 System.out.println("Parking lot is full. Cars cannot be admitted.");
                                 countforwaiting++;
-//                                out_time_queue.put("Parking lot is full.");
-//                                car_stream.put(new cars());
-//                                plate_queue.put("Null");
                                 Thread.sleep(1000);
                             }
                         }
-//                        else {
-//                            System.out.println("No more car is at entrance.");
-//                            Thread.sleep(1000);
-////                            out_time_queue.put("No more car is at entrance.");
-////                            car_stream.put(new cars());
-////                            plate_queue.put("Null");
-//                        }
                     } catch (InterruptedException | ParseException e) {
                         e.printStackTrace();
                     }
@@ -87,10 +77,6 @@ public class Main {
         //Both threads for entrance and exit
         Thread Exit = new Thread() {
             public void run() {
-                //System.out.println("this thread2 "+cars[2].getResidence_time());
-                //List<String> plate_list = new ArrayList<String>();
-                //List<Integer> residence_time_list = new ArrayList<Integer>();
-                //List<String> out_time_String = new ArrayList<String>();
                 Map<cars, String> actually_leaving_time_with_cars = new HashMap<cars, String>();// Original out time+ queue time
                 try {
                     for (int i = 0; i < 100; i++) {
@@ -105,10 +91,6 @@ public class Main {
                             Thread.sleep(1000);
                             check = false;
                         }}
-//                        for (Parkinglot.cars key : actually_leaving_time_with_cars.keySet()) {
-//                            String value = actually_leaving_time_with_cars.get(key);
-//                            System.out.print(" " + key.getLicense_plate() + " " + value + "     ");
-//                        }
                         for (Map.Entry<cars, String> entry : actually_leaving_time_with_cars.entrySet()) {
                             if (Current_time.equals(entry.getValue())) {
                                 exit_waiting_queue.put(entry.getKey());
@@ -127,23 +109,19 @@ public class Main {
         };
         Thread time_Process = new Thread() {
             public void run() {
-                //System.out.println("this thread2 "+cars[2].getResidence_time());
                 List<String> out_time_String = new ArrayList<String>();
                 List<String> plate_list = new ArrayList<String>();
                 List<cars> cars_list = new ArrayList<cars>();
-                //System.out.println("this is current time for time process : " + current_time_format);
                 try {
                     int count = 0;
                     for (int i = 0; i < 100; i++) {
 
                         SimpleDateFormat current_time = new SimpleDateFormat("HH:mm:ss");
                         String current_time_format = current_time.format(new Date());
-                        //String Current_time=current_time.take();
                         if(out_time_queue.peek()!=null&&plate_queue.peek()!=null&&car_stream.peek()!=null){
                         out_time_String.add(out_time_queue.take());
                         plate_list.add(plate_queue.take());
                         cars_list.add(car_stream.take());}
-//                        System.out.println(out_time_String);
                         for (int j = 0; j < out_time_String.size(); j++) {
                             if (current_time_format.equals(out_time_String.get(j))) {
                                 //exit_waiting_queue.put(plate_list.get(j));
