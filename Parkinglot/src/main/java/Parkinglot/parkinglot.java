@@ -8,6 +8,15 @@ public class parkinglot {
     private static int capacity =30;
     private static int remaining_capacity =30;
     private boolean if_admit ;
+    private double price;
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getPrice() {
+        return price;
+    }
 
     public static int getCapacity() {
         return capacity;
@@ -35,13 +44,12 @@ public class parkinglot {
     }
 
     public void exit_gate(cars car, String intime, String outime) throws ParseException {
-        int fee = payment_process(intime, outime);
+        double fee = payment_process(intime, outime);
         System.out.println("Car " + car.getLicense_plate() + " has paid the ticket for $" + fee + ".");
         remaining_capacity += 1;
     }
 
-    public int payment_process(String intime, String outime) throws ParseException {
-        int price = 5;//$5 per second
+    public double payment_process(String intime, String outime) throws ParseException {
         return price * time_cal(intime, outime);
     }
 

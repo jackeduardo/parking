@@ -12,9 +12,30 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        cars[] cars = read_input();
-        parkinglot Parkinglot = new parkinglot();
-        System.out.println("Parking lot is initialized.");
+        cars[] cars = read_input();// read cars input
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("Set the number of the parking lots: (Enter the integer for the number)");
+        int num = input.nextInt();
+        Group[] group = new Group[num];
+        System.out.println(group.length);
+        parkinglot[] Parkinglots = new parkinglot[num];
+        double[] prices = new double[num];
+        for (int i = 0; i < group.length; i++) {
+            group[i]=new Group();
+            group[i].setParkinglot();// group has the parking lots
+            group[i].setPolicies();
+            group[i].setDiscounts(i);
+            group[i].setprice();
+            System.out.println("The price of the parking lots " + (i+1) + " is $" + group[i].getprice() + ".");
+            System.out.println("There are " + group[i].getPolicies() + " policies in the parking lots " + (i+1) + ".");
+            System.out.println();
+            Parkinglots[i] = group[i].getParkinglot();
+            prices[i] = group[i].getprice();
+        }
+        int index=getMin_index(prices);
+        parkinglot Parkinglot = Parkinglots[index];
+        System.out.println("Parking lot "+(index+1)+" is initialized.");
         Timer t = new Timer();
         Parkinglot_Timer Parkinglot_timer = new Parkinglot_Timer();
         t.schedule(Parkinglot_timer, 1000, 1000);//Show the current time per sec
@@ -204,10 +225,30 @@ public class Main {
 
     }
 
+    public static int getMin_index(double[] prices) {
+        double min = prices[0];
+        int index = 0;
+        for (int i = 0; i < prices.length; i++) {
+            if (prices[i] < min) {
+                min = prices[i];
+                index = i;
+            }
+        }
+        System.out.println("Cars choose parking lots " + (index+1) + " because its price is lowest.");
+        return index;
+    }
+
     public static cars[] read_input() throws Exception {
         Scanner input = new Scanner(System.in);
-        System.out.println("Select the input (enter 1 - 5)");
-        String carin_number = input.nextLine();
+        int carin_number;
+        try {
+            System.out.println("Select the input (enter 1 - 5)");
+            carin_number = input.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Input is invalid, Program ended.");
+            System.exit(1);
+            throw e;
+        }
         File file = new File("C:\\Users\\xuhaiyang\\Desktop\\cosc4353\\cosc4353 hw3\\parking\\Parkinglot\\car_input\\carin" + carin_number);
         BufferedReader br_linescount = new BufferedReader(new FileReader(file));
         BufferedReader car_info_reader = new BufferedReader(new FileReader(file));
