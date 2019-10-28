@@ -8,11 +8,17 @@ public class cars {
     private boolean car_state = false;// If the car enters or exits the parking lot.
     private ticket ticket;
     private double received_price;
+    private boolean if_interest;
 
     public void setReceived_price(double received_price) {
-        this.received_price = received_price;
+        Random random = new Random();
+        if_interest=random.nextBoolean();
+        if(if_interest){
+        this.received_price = received_price;}
     }
-
+    public boolean get_interest(){
+        return if_interest;
+    }
     public void generate_residence_time() {
         Random random = new Random();
         this.Residence_time = random.nextInt((10-5)+1)+5;

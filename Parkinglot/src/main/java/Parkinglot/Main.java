@@ -33,7 +33,7 @@ public class Main {
             System.out.println("The original price of the parking lots " + (i+1) + " is $" + group[i].getOriginal_price() + ".");
             System.out.println("The price of the parking lots " + (i+1) + " is $" + (double)Math.round(group[i].getprice()*100) /100 + ".");
             System.out.println("There are " + group[i].getPolicies() + " policies in the parking lots " + (i+1) + ".");
-            System.out.println("The parking lots " + (i+1) + " has sent latest prices to interested cars.");
+            System.out.println("The parking lots " + (i+1) + " has sent latest price to interested cars.");
             System.out.println();
             Parkinglots[i] = group[i].getParkinglot();
             prices[i] = group[i].getprice();
