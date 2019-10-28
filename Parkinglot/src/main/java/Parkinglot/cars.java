@@ -7,6 +7,11 @@ public class cars {
     private int Residence_time;// The residence time is random for each car.
     private boolean car_state = false;// If the car enters or exits the parking lot.
     private ticket ticket;
+    private double received_price;
+
+    public void setReceived_price(double received_price) {
+        this.received_price = received_price;
+    }
 
     public void generate_residence_time() {
         Random random = new Random();
