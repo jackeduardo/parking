@@ -184,7 +184,7 @@ public class Main {
                 //System.out.println("this thread2 "+cars[2].getResidence_time());
                 try {
 
-                    FileOutputStream fs = new FileOutputStream(new File("C:\\Users\\xuhaiyang\\Desktop\\cosc4353\\cosc4353 hw3\\parking\\Parkinglot\\car_output\\carout"));
+                    FileOutputStream fs = new FileOutputStream(new File("car_output\\carout"));
                     PrintStream p = new PrintStream(fs);
 
                     for (int i = 0; i < 100; i++) {
@@ -254,7 +254,7 @@ public class Main {
             System.exit(1);
             throw e;
         }
-        File file = new File("C:\\Users\\xuhaiyang\\Desktop\\cosc4353\\cosc4353 hw3\\parking\\Parkinglot\\car_input\\carin" + carin_number);
+        File file = new File("car_input\\carin" + carin_number);
         BufferedReader br_linescount = new BufferedReader(new FileReader(file));
         BufferedReader car_info_reader = new BufferedReader(new FileReader(file));
         int lines = 0;
